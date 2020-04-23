@@ -43,7 +43,7 @@ export const TimeoutWatcher = ({ interval, iterations, watchFunction, timeoutFun
         await timeoutWatcher(_interval,_iterations,wf,tf);
       };
       fetchData();
-    }, [_interval,_iterations,wf,tf]); 
+    },[]); // eslint-disable-line react-hooks/exhaustive-deps
     // the parameter [] allows the effect to skip if value unchanged
     // an empty [] will only update on mount of component
     return (
