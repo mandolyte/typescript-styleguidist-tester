@@ -1,6 +1,12 @@
 # timeout-watcher
 A component to watch until TRUE or to timeout.
 
+*Concept*: The component will take the following properties:
+- iterations: the maximum number of iterations to make
+- interval: the number of milliseconds to sleep after each iteration
+- watch: the function to execute after each iteration; if it returns true, then exit loop; if false, continue to next iteration
+- timeout: the function to exectute if maximum iterations is reached
+
 ## Process Setup
 
 Article showing how to use Typescript and Styleguidist [here](https://medium.com/@mukuljainx/setup-a-react-component-library-using-create-react-app-react-styleguidist-and-typescript-b24608cb097e)
