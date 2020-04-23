@@ -1,28 +1,56 @@
+import React, { useEffect, useState } from 'react';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
-function BookPackageTotals({
-    delay,
-    iterations,
-    classes,
-    style,
-  }) 
-  {
-    const [_totals, setVal] = useState(<CircularProgress />);
-    let _delay = delay;
+import timeoutWatcher from '../../core/timeout-watcher';
+
+type TimeoutWatcherProps = {
+  interval: number,
+  iterations: number,
+  watchFunction: () => Boolean,
+  timeoutFunction: () => Boolean
+}
+
+export const TimeoutWatcher = ({ interval, iterations, watchFunction, timeoutFunction }: TimeoutWatcherProps) => {
+    const [value, setValue] = useState(<CircularProgress />);
+    let _interval = interval;
     let _iterations = iterations;
-    if ( _delay === undefined ) _delay = 1000;
+    if ( _interval === undefined ) _interval = 1000; // milliseconds
     if ( _iterations === undefined ) _iterations = 1000;
+
+    function getRandomArbitrary(min: number, max:number) {
+      return Math.random() * (max - min) + min;
+    }
+
+    const watchFunctionTest = () => {
+      const x = getRandomArbitrary(0,100);
+      if ( x >= 80 ) {
+        setValue(<div>It is done</div>)
+        return true;
+      }
+      return false;
+    }
+
+    const timeoutFunctionTest = () => {
+        setValue(<div>It timed out!</div>)
+    }
+
+    const wf = watchFunction ? watchFunction : watchFunctionTest;
+    const tf = timeoutFunction ? timeoutFunction : timeoutFunctionTest;
+
+    console.log("_interval,_iterations",_interval,_iterations)
     useEffect( () => {
       const fetchData = async () => {
-        await bp_totals(_delay,_iterations,setVal);
+        await timeoutWatcher(_interval,_iterations,wf,tf);
       };
       fetchData();
-    }, []); 
+    }, [_interval,_iterations,wf,tf]); 
     // the parameter [] allows the effect to skip if value unchanged
     // an empty [] will only update on mount of component
     return (
-      <div className={classes.root}>
-        {_totals}
+      <div>
+        {value}
       </div>
     );
   };
   
+  export default TimeoutWatcher;
